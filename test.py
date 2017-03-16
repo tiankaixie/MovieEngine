@@ -12,7 +12,9 @@ import plotly.graph_objs as go
 #  [2 0]]
 x = np.array([[1, 2, 3], [3, 4, 5], [5, 6, 7],[7, 8, 9]])
 print 'The orginal array:\n'
-print x
+print x.T
+print '========='
+print x.conj().T
 
 # Compute the Euclidean distance between all rows of x.
 # d[i, j] is the Euclidean distance between x[i, :] and x[j, :],
@@ -28,7 +30,9 @@ print '==========================================================='
 
 a = np.matrix([[1,2,3]])
 b = np.matrix([[1],[2],[3]])
-y = a * b
+a = a.T
+y = np.multiply(a,b)
+
 print a.T
 print b
 print y
@@ -57,7 +61,7 @@ print '=============================================================='
 num_users = 4
 num_movies = 5
 num_features = 3
-Theta = Theta(1:num_users, 1:num_features)
+Theta = Theta[0:num_users, 0:num_features]
 cofiCostFunc(vstack((X,Theta)))
 
 
