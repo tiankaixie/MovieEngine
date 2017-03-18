@@ -5,6 +5,22 @@ from scipy.io import loadmat
 import plotly.plotly as py
 import plotly.graph_objs as go
 
+def normalizeRatings(Y, R):
+	print Y.shape
+	[m,n] = Y.shape
+	print m
+	print n
+	Ymean = np.matlib.zeros((m, 1))
+	Ynorm = np.matlib.zeros((m, n))
+	for i in range(m):
+		idx = R[i,].ravel().nonzero()
+		#print idx[1]
+		idx = idx[1]
+		Ymean[i] = Y[i, idx].mean()
+		#print Ynorm
+		Ynorm[i, idx] = Y[i, idx] -  Ymean[i]
+
+	return Ynorm, Ymean
 
 def cofiCostFunc(params, Y ,R, num_users, num_movies, num_features, lambd):
 	print '=============== Here goes the cofiCostFunc =================='
@@ -85,4 +101,22 @@ print 'params len:'
 print params[0,:]
 cofiCostFunc(params=params, Y = Y ,R = R, num_users = num_users, num_movies = num_movies, num_features = num_features, lambd = 1.5)
 
+print 'now we are going to implemente the minimize fuction.. hopefully in will work\n'
 
+print 'first we need to see Ynorm and Ymean\\n'
+
+[Ynorm, Ymean] = normalizeRatings(Y, R)
+
+print Ynorm
+
+print '=========='
+
+print Ymean
+
+
+X = np.matlib.randn(num_movies,num_features)
+Theta = np.matlib.randn(num_users,num_features)
+
+initial_parameters = np.concatenate((X.flatten(),Theta.flatten()),axis = 1) 
+
+theta = minimize()
