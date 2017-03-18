@@ -7,7 +7,9 @@ Theta = np.matrix(ans['Theta'])
 # num_users = int(ans['num_users'])
 # num_movies = int(ans['num_movies'])
 # num_features = int(ans['num_features'])
-
+num_users = 4
+num_movies = 5
+num_features = 3
 ans = loadmat('ex8_movies.mat')
 Y = np.matrix(ans['Y'])
 R = np.matrix(ans['R'])
