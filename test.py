@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from scipy.io import loadmat
+from scipy.optimize import minimize
 
 import plotly.plotly as py
 import plotly.graph_objs as go
@@ -25,9 +26,12 @@ def normalizeRatings(Y, R):
 def cofiCostFunc(params, Y ,R, num_users, num_movies, num_features, lambd):
 	print '=============== Here goes the cofiCostFunc =================='
 	print num_movies*num_features
-	print len(params[0, 0:num_movies*num_features+1])
-	X = np.reshape(params[0, 0:num_movies*num_features], (num_movies, num_features))
-	Theta = np.reshape(params[0, num_movies*num_features:], (num_users, num_features))
+	print len(params)
+	print params
+	params = np.matrix(params)
+	# print len(params[0, 0:num_movies*num_features+1])
+	X = np.reshape(params[0,0:num_movies*num_features], (num_movies, num_features))
+	Theta = np.reshape(params[0,num_movies*num_features:], (num_users, num_features))
 	print X
 	print Theta
 	print 'phase1'
@@ -40,7 +44,7 @@ def cofiCostFunc(params, Y ,R, num_users, num_movies, num_features, lambd):
 	print phase3
 	print 'all'
 	print phase1 + phase2 + phase3
-	pass
+	return phase1 + phase2 + phase3
 
 # Create the following array where each row is a point in 2D space:
 # [[0 1]
@@ -119,4 +123,4 @@ Theta = np.matlib.randn(num_users,num_features)
 
 initial_parameters = np.concatenate((X.flatten(),Theta.flatten()),axis = 1) 
 
-theta = minimize()
+theta = minimize(fun = cofiCostFunc, x0 = initial_parameters ,args = (Ynorm ,R , num_users, num_movies, num_features, 10), options = {'maxiter': 100,'disp': True}, tol = 1e-9)
