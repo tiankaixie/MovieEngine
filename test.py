@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from scipy.io import loadmat
-from scipy.optimize import minimize
+from scipy.optimize import fmin_cg
 
 import plotly.plotly as py
 import plotly.graph_objs as go
@@ -24,26 +24,18 @@ def normalizeRatings(Y, R):
 	return Ynorm, Ymean
 
 def cofiCostFunc(params, Y ,R, num_users, num_movies, num_features, lambd):
-	print '=============== Here goes the cofiCostFunc =================='
-	print num_movies*num_features
-	print len(params)
-	print params
 	params = np.matrix(params)
 	# print len(params[0, 0:num_movies*num_features+1])
 	X = np.reshape(params[0,0:num_movies*num_features], (num_movies, num_features))
 	Theta = np.reshape(params[0,num_movies*num_features:], (num_users, num_features))
-	print X
-	print Theta
-	print 'phase1'
 	phase1 = (1./2) * np.sum(np.sum(np.asarray(np.multiply(X * Theta.T,R) - Y)**2,axis = 1))
-	print phase1
 	phase2 =  (lambd/float(2)) * np.sum(np.sum(np.asarray(Theta)**2,axis = 1)) 
-	print 'phase2'
-	print phase2
 	phase3 = (lambd/float(2)) * np.sum(np.sum(np.asarray(X)**2,axis = 1))
-	print phase3
-	print 'all'
+	print 'cost:'
 	print phase1 + phase2 + phase3
+	X_grad = (np.multiply(X * Theta.T, R) - Y)*Theta + lambd * X
+	Theta_grad = (np.multiply(X * Theta.T, R) - Y).T * X + lambd * Theta
+	grad = np.concatenate((X_grad.flatten(),Theta_grad.flatten()),axis = 1) 
 	return phase1 + phase2 + phase3
 
 # Create the following array where each row is a point in 2D space:
@@ -88,39 +80,19 @@ num_features = int(ans['num_features'])
 # ]
 # py.iplot(data, filename='basic-heatmap')
 
-print R[0,] 
-print Y[0, R[0,].ravel().nonzero()][1,]
-
 print '%f /5 \n' % Y[0, R[0,].ravel().nonzero()][1,].mean()
 
-print '=============================================================='
-
-print X
-print Theta
-print X.flatten()
-print Theta.flatten()
-
 params = np.concatenate((X.flatten(),Theta.flatten()),axis = 1) 
-print 'params len:'
-print params[0,:]
+
 cofiCostFunc(params=params, Y = Y ,R = R, num_users = num_users, num_movies = num_movies, num_features = num_features, lambd = 1.5)
 
 print 'now we are going to implemente the minimize fuction.. hopefully in will work\n'
 
-print 'first we need to see Ynorm and Ymean\\n'
-
 [Ynorm, Ymean] = normalizeRatings(Y, R)
-
-print Ynorm
-
-print '=========='
-
-print Ymean
-
 
 X = np.matlib.randn(num_movies,num_features)
 Theta = np.matlib.randn(num_users,num_features)
 
 initial_parameters = np.concatenate((X.flatten(),Theta.flatten()),axis = 1) 
 
-theta = minimize(fun = cofiCostFunc, x0 = initial_parameters ,args = (Ynorm ,R , num_users, num_movies, num_features, 10), options = {'maxiter': 100,'disp': True}, tol = 1e-9)
+theta = fmin_cg(fun = cofiCostFunc, x0 = initial_parameters ,args = (Ynorm ,R , num_users, num_movies, num_features, 10), options = {'maxiter': 100,'disp': True}, tol = 1e-9)
