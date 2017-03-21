@@ -24,6 +24,7 @@ def normalizeRatings(Y, R):
 	return Ynorm, Ymean
 
 def cofiCostFunc(params, Y ,R, num_users, num_movies, num_features, lambd):
+
 	params = np.matrix(params)
 	# print len(params[0, 0:num_movies*num_features+1])
 	X = np.reshape(params[0,0:num_movies*num_features], (num_movies, num_features))
@@ -33,11 +34,20 @@ def cofiCostFunc(params, Y ,R, num_users, num_movies, num_features, lambd):
 	phase3 = (lambd/float(2)) * np.sum(np.sum(np.asarray(X)**2,axis = 1))
 	print 'cost:'
 	print phase1 + phase2 + phase3
-	X_grad = (np.multiply(X * Theta.T, R) - Y)*Theta + lambd * X
-	Theta_grad = (np.multiply(X * Theta.T, R) - Y).T * X + lambd * Theta
-	grad = np.concatenate((X_grad.flatten(),Theta_grad.flatten()),axis = 1) 
+
 	return phase1 + phase2 + phase3
 
+def compute_grad(params, Y ,R, num_users, num_movies, num_features, lambd):
+	params = np.matrix(params)
+	# print len(params[0, 0:num_movies*num_features+1])
+	X = np.reshape(params[0,0:num_movies*num_features], (num_movies, num_features))
+	Theta = np.reshape(params[0,num_movies*num_features:], (num_users, num_features))
+	X_grad = (np.multiply(X * Theta.T, R) - Y)*Theta + lambd * X
+	Theta_grad = (np.multiply(X * Theta.T, R) - Y).T * X + lambd * Theta
+	grad = np.concatenate((X_grad.flatten(),Theta_grad.flatten()),axis = 1)
+	return np.squeeze(np.asarray(grad))
+
+# =============================================================
 # Create the following array where each row is a point in 2D space:
 # [[0 1]
 #  [1 0]
@@ -94,5 +104,7 @@ X = np.matlib.randn(num_movies,num_features)
 Theta = np.matlib.randn(num_users,num_features)
 
 initial_parameters = np.concatenate((X.flatten(),Theta.flatten()),axis = 1) 
+print 'executing'
 
-theta = fmin_cg(fun = cofiCostFunc, x0 = initial_parameters ,args = (Ynorm ,R , num_users, num_movies, num_features, 10), options = {'maxiter': 100,'disp': True}, tol = 1e-9)
+print initial_parameters.shape
+res = fmin_cg(f = cofiCostFunc, x0 = initial_parameters ,fprime = compute_grad, args = (Ynorm ,R , num_users, num_movies, num_features, 10), maxiter = 100,disp = True)
