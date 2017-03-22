@@ -53,7 +53,7 @@ def loadMovie():
 	for line in file:
 		info = line.split(' ',1)
 		bucket.append(info[1][:-1])
-	#print bucket
+	print bucket
 	return bucket
 
 
@@ -165,7 +165,7 @@ initial_parameters = np.concatenate((X.flatten(),Theta.flatten()),axis = 1)
 print 'executing'
 
 print initial_parameters.shape
-res= fmin_cg(f = cofiCostFunc, x0 = initial_parameters ,fprime = compute_grad, args = (Ynorm ,R , num_users, num_movies, num_features, 10), maxiter = 10,disp = True)
+res= fmin_cg(f = cofiCostFunc, x0 = initial_parameters ,fprime = compute_grad, args = (Ynorm ,R , num_users, num_movies, num_features, 10), maxiter = 100,disp = True)
 
 # print res.shape
 # , fopt, fun_calls, grad_calls, warnflag, allevcs 
@@ -182,3 +182,10 @@ print Ymean.shape
 my_predict = predict[:,0] + Ymean
 
 print my_predict
+n = len(my_predict)
+ranks = sorted(range(len(my_predict)), key = my_predict.__getitem__ , reverse = True)
+print my_predict[ranks]
+movielist = np.array(movieList)[ranks]
+print movielist
+for x in xrange(0,10):
+	print '[{0}] : {1} '.format(x,movielist[x])
