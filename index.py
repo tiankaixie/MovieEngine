@@ -4,28 +4,26 @@ import plotly.graph_objs as go
 from flask import Flask, render_template, request
 
 from scipy.spatial.distance import pdist, squareform
-from scipy.io import loadmat
 from scipy.optimize import fmin_cg
 
 # Local modules
 from model.forms import SearchForm
 from dao.movieDao import searchMovie
+from utils.learning import collaborateFiltering
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 
 @app.route('/',methods=['GET', 'POST'])
 def index():
-    form = SearchForm(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST':
         print 'The form is received. '
-        print form.name.data
-        res = searchMovie(form.name.data)
+        print request.form.get('movieName')
+        res = searchMovie(request.form.get('movieName'))
         print 'returned'
 
         return render_template('result.html', search_res = res)
-    return render_template('search.html', form = form)
-
+    return render_template('search.html')
 
 @app.route('/searchById/<int:movie_id>')
 def searchById(movie_id):
@@ -48,6 +46,13 @@ def rateMovie(movie_id):
     print 'the data has been received -- {0}'.format(movie_id)
     print 'loading ratings ...'
     pass
+
+@app.route('/getrecommend')
+def getRecommend():
+    res = collaborateFiltering()
+    return render_template('recommendation.html', movies = res)
+    
+    
 
 if __name__ == "__main__":
     app.run()

@@ -1,5 +1,6 @@
 import re
 import numpy as np
+from scipy.io import loadmat
 
 data_movies = loadmat('data/ex8_movies.mat')
 data_movies_params = loadmat('data/ex8_movieParams.mat')
@@ -32,4 +33,25 @@ def loadData():
     num_users = int(data_movies_params['num_users'])
     num_movies = int(data_movies_params['num_movies'])
     num_features = int(data_movies_params['num_features'])
+
+    # test rating
+    my_ratings = np.matlib.zeros((1682,1))
+    my_ratings[0] = 4
+    my_ratings[97] = 2
+    my_ratings[6] = 3
+    my_ratings[11] = 5
+    my_ratings[53] = 4
+    my_ratings[63] = 5
+    my_ratings[65] = 3
+    my_ratings[68] = 5
+    my_ratings[182] = 4
+    my_ratings[225] = 5
+    my_ratings[354] = 5
+    Y = np.concatenate((my_ratings,Y),1)#print Y.shape
+    idx = my_ratings.ravel().nonzero()
+    idx = idx[1]
+    my_mask = np.matlib.zeros((1682,1))
+    my_mask[idx] = 1
+    #print R.shape
+    R = np.concatenate((my_mask,R),1)
     return Y, R, X, Theta, num_users, num_movies, num_features

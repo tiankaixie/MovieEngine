@@ -6,7 +6,7 @@ from scipy.optimize import fmin_cg
 import plotly.plotly as py
 import plotly.graph_objs as go
 
-from dao.movieDao import loadData
+from dao.movieDao import loadData, loadMovie
 
 def normalizeRatings(Y, R):
 	[m,n] = Y.shape
@@ -56,13 +56,30 @@ def collaborateFiltering():
 
 	[Y, R, X, Theta, num_users, num_movies, num_features] = loadData()
 	[Ynorm, Ymean] = normalizeRatings(Y, R)
+	[num_movies , num_users] = Y.shape
+	num_features = 10;
 	X = np.matlib.randn(num_movies,num_features)
 	Theta = np.matlib.randn(num_users,num_features)
 	initial_parameters = np.concatenate((X.flatten(),Theta.flatten()),axis = 1) 
 	print 'executing the learning algorithm...'
 	print initial_parameters.shape
+
 	res= fmin_cg(f = cofiCostFunc, x0 = initial_parameters ,fprime = compute_grad, args = (Ynorm ,R , num_users, num_movies, num_features, 10), maxiter = 100,disp = True)
 	# print res.shape
 	# , fopt, fun_calls, grad_calls, warnflag, allevcs 
 	X = np.reshape(res[0:num_movies*num_features], (num_movies, num_features))
 	Theta = np.reshape(res[num_movies*num_features:], (num_users, num_features))
+
+	predict = np.matrix(X)*np.matrix(Theta).T;
+	print 'predicting:'
+	my_predict = predict[:,0] + Ymean
+
+	n = len(my_predict)
+	ranks = sorted(range(len(my_predict)), key = my_predict.__getitem__ , reverse = True)
+	# print my_predict[ranks]
+	movieList = loadMovie()
+	movielist = np.array(movieList)[ranks]
+	print movielist
+	for x in xrange(0,10):
+		print '[{0}] : {1} '.format(x,movielist[x])
+	return movielist[0:10]
