@@ -1,7 +1,16 @@
 {% from "_formhelpers.html" import render_field %}
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Recommender System Web UI</title>
+</head>
+<body>
 <form method=post>
   <dl>
     {{ render_field(form.name) }}
   </dl>
-  <p><input type=submit value=Search>
+  <p><input type=submit value=Search></p>
 </form>
+<a href="ratemovie">Rate movie</a>
+</body>
+</html>

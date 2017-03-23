@@ -1,8 +1,7 @@
 <!doctype html>
-<title>Recommender System Web UI</title>
-{% for item in search_res %}
+<title>Search Results</title>
+{% for res_id, item in search_res %}
 <ul>
-     <li> {{ item }} </li>
- </ul>
-            
+     <li><a href="{{res_id }}"> {{ item }} </a></li>
+</ul>            
 {% endfor %}
