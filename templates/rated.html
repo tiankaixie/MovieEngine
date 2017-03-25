@@ -45,7 +45,7 @@
           <a class="navbar-brand" href="#">MRS</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" method="post">
+          <form class="navbar-form navbar-right" method="post" action="/">
             <div class="form-group">
               <input type="text" name="movieName" class="form-control" placeholder="Movie name" required autofocus>
             </div>
@@ -70,15 +70,15 @@
               <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Action</th>
+                <th>Score</th>
               </tr>
             </thead>
             <tbody>
-            {% for res_id, item in search_res %}
+            {% for item in rated %}
               <tr>
                 <td>1</td>
-                <td><a href="info/{{res_id }}"> {{ item }} </a></td>
-                <td><a href="#" class="btn"> Rate </a></td>
+                <td>{{ item }}</td>
+                <td> score</td>
               </tr>
             {% endfor %}
             </tbody>

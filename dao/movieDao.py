@@ -56,6 +56,17 @@ def loadData():
     R = np.concatenate((my_mask,R),1)
     return Y, R, X, Theta, num_users, num_movies, num_features
 
-def getMyRatings():
-    my_ratings = np.matlib.zeros((1682,1))
+def createMyRatings():
+    my_ratings = [0] * 1682
     return my_ratings
+
+def getRatedMovies(my_ratings):
+    # my_ratings = np.squeeze(np.asarray(my_ratings))
+    # print my_ratings
+    # print '$$$$$$$$$$$$$$$$$$$$$$$$$4'
+    idx = [i for i, e in enumerate(my_ratings) if e != 0]
+    # print idx
+    movieList = loadMovie()
+    movieList = np.asarray(movieList)
+    # print movieList[idx]
+    return movieList[idx]

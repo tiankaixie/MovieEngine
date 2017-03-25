@@ -62,6 +62,12 @@ def loadMovie():
 # [[0 1]
 #  [1 0]
 #  [2 0]]
+
+my_ratings = np.matlib.zeros((1682,1))
+print '####################################################3'
+print type(my_ratings)
+
+print '###################################3'
 x = np.array([[1, 2, 3], [3, 4, 5], [5, 6, 7],[7, 8, 9]])
 print 'The orginal array:\n'
 print x.T
@@ -115,6 +121,10 @@ print Theta.shape
 print 'Now for new users to rate the movie:'
 
 my_ratings = np.matlib.zeros((1682,1))
+print '####################################################3'
+print type(my_ratings)
+
+print '###################################3'
 
 my_ratings[0] = 4
 my_ratings[97] = 2
