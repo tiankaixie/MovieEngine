@@ -55,3 +55,7 @@ def loadData():
     #print R.shape
     R = np.concatenate((my_mask,R),1)
     return Y, R, X, Theta, num_users, num_movies, num_features
+
+def getMyRatings():
+    my_ratings = np.matlib.zeros((1682,1))
+    return my_ratings
