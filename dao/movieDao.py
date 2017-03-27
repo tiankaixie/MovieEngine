@@ -21,7 +21,14 @@ def searchMovie(movieName):
     print res_idx
     movieList = np.asarray(movieList)
     print 'going to return'
-    res = zip(res_idx, movieList[res_idx])
+    Y = np.matrix(data_movies['Y'])
+    R = np.matrix(data_movies['R'])
+    rateList = []
+    for x in res_idx:
+        rateList.append("{0:.2f}".format(Y[x, R[x,].ravel().nonzero()][1,].mean()))
+    print "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+    print rateList
+    res = zip(res_idx, movieList[res_idx],rateList)
     return res
 
 def loadData():
@@ -69,4 +76,5 @@ def getRatedMovies(my_ratings):
     movieList = loadMovie()
     movieList = np.asarray(movieList)
     # print movieList[idx]
-    return movieList[idx]
+
+    return zip(movieList[idx],np.asarray(my_ratings)[idx])

@@ -56,11 +56,9 @@
     </nav>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
       <div class="container">
-        <p>Results:</p>
+        <h2>Results for movie '{{moviename}}':</h2>
       </div>
-    </div>
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
@@ -70,15 +68,15 @@
               <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Action</th>
+                <th>Rating</th>
               </tr>
             </thead>
             <tbody>
-            {% for res_id, item in search_res %}
+            {% for res_id, item, rating in search_res %}
               <tr>
-                <td>1</td>
+                <td>{{loop.index}}</td>
                 <td><a href="info/{{res_id }}"> {{ item }} </a></td>
-                <td><a href="#" > Rate </a></td>
+                <td>{{rating}}</td>
               </tr>
             {% endfor %}
             </tbody>

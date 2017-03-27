@@ -1,7 +1,8 @@
 import plotly.plotly as py
 import plotly.graph_objs as go
 import numpy as np
-from flask import Flask, render_template, request, session, redirect, url_for
+import requests
+from flask import Flask, render_template, request, session, redirect, url_for, Response, send_file
 
 from scipy.spatial.distance import pdist, squareform
 from scipy.optimize import fmin_cg
@@ -24,11 +25,11 @@ def index():
         session['user_rate'] = my_ratings
     if request.method == 'POST':
         print 'The form is received. '
-        print request.form.get('movieName')
+        movieName =  request.form.get('movieName')
         res = searchMovie(request.form.get('movieName'))
-        print 'returned'
-        print res
-        return render_template('result.html', search_res = res)
+        #print 'returned'
+        #print res
+        return render_template('result.html', moviename = movieName, search_res = res)
     return render_template('search.html')
 
 @app.route('/searchById/<int:movie_id>')
@@ -87,14 +88,16 @@ def ratedMovies():
 
     return render_template('rated.html', rated = rated)
 
-
 @app.route('/getrecommend')
-def getRecommend():
+def getRecommendContent():
     res = collaborateFiltering()
+    # return Response(collaborateFiltering(), mimetype= 'text/event-stream')
     return render_template('recommendation.html', movies = res)
     
+@app.route('/page')
+def get_page():
+    return send_file('templates/progress.html')
     
-
 if __name__ == "__main__":
     # app.secret_key = 'super secret key'
     # app.config['SESSION_TYPE'] = 'filesystem'
