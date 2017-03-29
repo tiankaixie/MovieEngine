@@ -97,7 +97,11 @@ def getRecommendContent():
 @app.route('/page')
 def get_page():
     return send_file('templates/progress.html')
-    
+
+@app.route('/features')
+def features():
+    return render_template('features.html')
+
 if __name__ == "__main__":
     # app.secret_key = 'super secret key'
     # app.config['SESSION_TYPE'] = 'filesystem'

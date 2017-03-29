@@ -88,23 +88,21 @@ print y
 
 
 print 'Loading data:\n'
-ans = loadmat('ex8_movies.mat')
+ans = loadmat('data/ex8_movies.mat')
 Y = np.matrix(ans['Y'])
 R = np.matrix(ans['R'])
 print Y
 print '\n'
 print R
-ans = loadmat('ex8_movieParams.mat')
+ans = loadmat('data/ex8_movieParams.mat')
 X = np.matrix(ans['X'])
 Theta = np.matrix(ans['Theta'])
 num_users = int(ans['num_users'])
 num_movies = int(ans['num_movies'])
 num_features = int(ans['num_features'])
 
-# data = [
-#     go.Heatmap(z = Y)
-# ]
-# py.iplot(data, filename='basic-heatmap')
+data = [go.Heatmap(z = Y)]
+py.iplot(data, filename='basic-heatmap')
 
 print '%f /5 \n' % Y[0, R[0,].ravel().nonzero()][1,].mean()
 

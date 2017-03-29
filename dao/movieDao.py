@@ -2,6 +2,9 @@ import re
 import numpy as np
 from scipy.io import loadmat
 
+import plotly.plotly as py
+import plotly.graph_objs as go
+
 data_movies = loadmat('data/ex8_movies.mat')
 data_movies_params = loadmat('data/ex8_movieParams.mat')
 

@@ -7,6 +7,7 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 
 from dao.movieDao import loadData, loadMovie
+from utils.plot_utils import plot_heatmap
 
 def normalizeRatings(Y, R):
 	[m,n] = Y.shape
@@ -69,7 +70,9 @@ def collaborateFiltering():
 	# , fopt, fun_calls, grad_calls, warnflag, allevcs 
 	X = np.reshape(res[0:num_movies*num_features], (num_movies, num_features))
 	Theta = np.reshape(res[num_movies*num_features:], (num_users, num_features))
-
+	print 'generating heatmap...'
+	# plot_heatmap(X)
+	print 'finished.'
 	predict = np.matrix(X)*np.matrix(Theta).T;
 	print 'predicting:'
 	my_predict = predict[:,0] + Ymean
@@ -78,8 +81,12 @@ def collaborateFiltering():
 	ranks = sorted(range(len(my_predict)), key = my_predict.__getitem__ , reverse = True)
 	# print my_predict[ranks]
 	movieList = loadMovie()
+
 	movielist = np.array(movieList)[ranks]
 	print movielist
+	ratings = []
 	for x in xrange(0,10):
+		ratings.append(Y[ranks[x], R[ranks[x],].ravel().nonzero()][1,].mean())
+
 		print '[{0}] : {1} '.format(x,movielist[x])
-	return movielist[0:10]
+	return zip(movielist[0:10],ratings)
